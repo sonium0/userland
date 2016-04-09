@@ -61,7 +61,7 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #include <netinet/in.h>
 #include <arpa/inet.h>
 
-#define VERSION_STRING "v1.3.12"
+#define VERSION_STRING "v1.3.12l"
 
 #include "bcm_host.h"
 #include "interface/vcos/vcos.h"
@@ -1743,6 +1743,21 @@ static MMAL_STATUS_T create_encoder_component(RASPIVID_STATE *state)
    if (mmal_port_parameter_set_boolean(encoder_output, MMAL_PARAMETER_VIDEO_ENCODE_INLINE_HEADER, state->bInlineHeaders) != MMAL_SUCCESS)
    {
       vcos_log_error("failed to set INLINE HEADER FLAG parameters");
+      // Continue rather than abort..
+   }
+
+
+   //set low latency h264 flag
+   if (mmal_port_parameter_set_boolean(encoder_output, MMAL_PARAMETER_VIDEO_ENCODE_H264_LOW_LATENCY, 1) != MMAL_SUCCESS)
+   {
+      vcos_log_error("failed to set H264 LOW LATENCY FLAG parameters");
+      // Continue rather than abort..
+   }
+
+   //set LOW DELAY HRD h264 flag
+   if (mmal_port_parameter_set_boolean(encoder_output, MMAL_PARAMETER_VIDEO_ENCODE_H264_LOW_DELAY_HRD_FLAG, 1) != MMAL_SUCCESS)
+   {
+      vcos_log_error("failed to set H264 LOW DELAY HRD FLAG parameters");
       // Continue rather than abort..
    }
 
